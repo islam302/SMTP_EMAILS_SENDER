@@ -2,3 +2,5 @@ env/
 build/
 dist/
 results/
+attachments/
+credentials.txt/
