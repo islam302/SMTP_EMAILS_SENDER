@@ -4,49 +4,46 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-def read_contacts(file_path, sheet_name):
-    df = pd.read_excel(file_path, sheet_name=sheet_name)
+def read_contacts(file_path):
+    df = pd.read_excel(file_path)
     return df['name'], df['email']
 
-def send_email(sender_email, sender_password, recipient_email, subject, message):
+def send_email(smtp_username, smtp_password, from_email, to_email, subject, body):
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 587
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = to_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
     try:
-        msg = MIMEMultipart()
-        msg['From'] = sender_email
-        msg['To'] = recipient_email
-        msg['Subject'] = subject
-
-        msg.attach(MIMEText(message, 'plain'))
-
-        # Use the correct SMTP server and port for SSL
-        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        server.login(sender_email, sender_password)
-        text = msg.as_string()
-        server.sendmail(sender_email, recipient_email, text)
-        server.quit()
-        print(f"Email sent successfully to {recipient_email}")
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_username, smtp_password)
+            server.send_message(msg)
+            print(f"Email sent from {from_email} to {to_email}")
     except Exception as e:
-        print(f"Error sending email to {recipient_email}: {str(e)}")
+        print(f"Failed to send email: {e}")
 
 def main():
     # Excel file path and selected sheet name
     file_path = 'data.xlsx'  # Update with your Excel file path
-    sheet_name = 'Sheet1'  # Update with your sheet name
-
     # Email details
     sender_email = 'islambadran39@gmail.com'  # Update with your email address
     sender_password = 'yrwp xhds hdtp cuqe'  # Update with your email password
+    from_email = 'tcc@una-oic.org'
     subject = 'GMAIL'
     message = 'hi stubid'
 
     # Read contacts from Excel
-    names, emails = read_contacts(file_path, sheet_name)
+    names, emails = read_contacts(file_path)
 
     # Send emails
     for name, email in zip(names, emails):
         recipient_email = email
-        personalized_message = f"Dear {name},\n\n{message}"
 
-        send_email(sender_email, sender_password, recipient_email, subject, personalized_message)
+        send_email(sender_email, sender_password, from_email, recipient_email, subject, message)
 
 if __name__ == "__main__":
     main()
