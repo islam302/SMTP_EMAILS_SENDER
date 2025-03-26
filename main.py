@@ -92,14 +92,14 @@ if __name__ == "__main__":
 #
 # # ???? ???????? ????????? ?? ???? ?????? ?? ???? ??????
 # def replace_variables(template, row):
-#     pattern = re.compile(r'«(.*?)»')
+#     pattern = re.compile(r'ï¿½(.*?)ï¿½')
 #     matches = pattern.findall(template)
 #     for match in matches:
 #         if match in row:
 #             value = row[match]
 #             if pd.isna(value):
 #                 value = ""
-#             template = template.replace(f'«{match}»', str(value))
+#             template = template.replace(f'ï¿½{match}ï¿½', str(value))
 #         else:
 #             print(f"Warning: Column '{match}' not found in the Excel file")
 #     return template
@@ -191,14 +191,14 @@ if __name__ == "__main__":
 #
 #     # ???? ???????? ????????? ?? ???? ?????? ?? ???? ??????
 #     def replace_variables(template, row):
-#         pattern = re.compile(r'«(.*?)»')
+#         pattern = re.compile(r'ï¿½(.*?)ï¿½')
 #         matches = pattern.findall(template)
 #         for match in matches:
 #             if match in row:
 #                 value = row[match]
 #                 if pd.isna(value):
 #                     value = ""
-#                 template = template.replace(f'«{match}»', str(value))
+#                 template = template.replace(f'ï¿½{match}ï¿½', str(value))
 #             else:
 #                 print(f"Warning: Column '{match}' not found in the Excel file")
 #         return template
@@ -216,7 +216,7 @@ if __name__ == "__main__":
 #             msg = MIMEMultipart()
 #             msg['From'] = smtp_username
 #             msg['To'] = email
-#             msg['Subject'] = subject  # Use the subject input by the user
+#             msg['Subject'] = subject  # Use the subject input by the users
 #
 #             # ????? ???? ?????? ???????? ??????
 #             msg.attach(MIMEText(message_body, 'plain', 'utf-8'))
@@ -383,14 +383,14 @@ if __name__ == "__main__":
 #
 #             # ???? ???????? ????????? ?? ???? ?????? ?? ???? ??????
 #             def replace_variables(template, row):
-#                 pattern = re.compile(r'«(.*?)»')
+#                 pattern = re.compile(r'ï¿½(.*?)ï¿½')
 #                 matches = pattern.findall(template)
 #                 for match in matches:
 #                     if match in row:
 #                         value = row[match]
 #                         if pd.isna(value):
 #                             value = ""
-#                         template = template.replace(f'«{match}»', str(value))
+#                         template = template.replace(f'ï¿½{match}ï¿½', str(value))
 #                     else:
 #                         print(f"Warning: Column '{match}' not found in the Excel file")
 #                 return template
@@ -592,14 +592,14 @@ if __name__ == "__main__":
 #     #
 #     #         # Function to replace variables in the template with values from the Excel row
 #     #         def replace_variables(template, row):
-#     #             pattern = re.compile(r'«(.*?)»')
+#     #             pattern = re.compile(r'ï¿½(.*?)ï¿½')
 #     #             matches = pattern.findall(template)
 #     #             for match in matches:
 #     #                 if match in row:
 #     #                     value = row[match]
 #     #                     if pd.isna(value):
 #     #                         value = ""
-#     #                     template = template.replace(f'«{match}»', str(value))
+#     #                     template = template.replace(f'ï¿½{match}ï¿½', str(value))
 #     #                 else:
 #     #                     print(f"Warning: Column '{match}' not found in the Excel file")
 #     #             return template
@@ -697,14 +697,14 @@ if __name__ == "__main__":
 #
 #             # Function to replace variables in the template with values from the Excel row
 #             def replace_variables(template, row):
-#                 pattern = re.compile(r'«(.*?)»')
+#                 pattern = re.compile(r'ï¿½(.*?)ï¿½')
 #                 matches = pattern.findall(template)
 #                 for match in matches:
 #                     if match in row:
 #                         value = row[match]
 #                         if pd.isna(value):
 #                             value = ""
-#                         template = template.replace(f'«{match}»', str(value))
+#                         template = template.replace(f'ï¿½{match}ï¿½', str(value))
 #                     else:
 #                         print(f"Warning: Column '{match}' not found in the Excel file")
 #                 return template

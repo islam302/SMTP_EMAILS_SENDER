@@ -143,8 +143,6 @@
 import os
 import shutil
 import pandas as pd
-from docx import Document
-from docx2pdf import convert
 from tkinter import *
 from tkinter import ttk, messagebox, filedialog
 from PIL import Image, ImageTk

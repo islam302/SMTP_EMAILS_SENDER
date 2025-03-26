@@ -127,9 +127,9 @@ def create_gui():
 
     # Load eye icons
     global eye_open_photo, eye_closed_photo
-    eye_open_image = Image.open("eye-open.png").resize((20, 20), Image.LANCZOS)  # Replace with your eye-open icon path
+    eye_open_image = Image.open("logo.jpg").resize((20, 20), Image.LANCZOS)  # Replace with your eye-open icon path
     eye_open_photo = ImageTk.PhotoImage(eye_open_image)
-    eye_closed_image = Image.open("eye-closed.png").resize((20, 20), Image.LANCZOS)  # Replace with your eye-closed icon path
+    eye_closed_image = Image.open("logo.jpg").resize((20, 20), Image.LANCZOS)  # Replace with your eye-closed icon path
     eye_closed_photo = ImageTk.PhotoImage(eye_closed_image)
 
     global toggle_button
