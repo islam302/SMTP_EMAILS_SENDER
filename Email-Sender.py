@@ -47,6 +47,7 @@ class EmailSenderApp(tk.Tk):
         self.word_template_path = None
         self.html_template_path = None
         self.excel_file_path = None
+        self.attachment_folder_path = None
         self.email_provider = StringVar()
 
         self.email_credentials = self.load_email_credentials()
@@ -88,15 +89,12 @@ class EmailSenderApp(tk.Tk):
         btn_browse_excel = ttk.Button(self, text="Choose Excel File", command=self.browse_excel_file)
         self.canvas_bg.create_window(150, 440, anchor='w', window=btn_browse_excel)
 
-        label_provider = ttk.Label(self, text="Choose Email Provider:", font=("Segoe UI", 16, "bold"))
-        self.canvas_bg.create_window(20, 480, anchor='w', window=label_provider)
+        # ✅ زر اختيار مجلد المرفقات بعد زر الإكسل مباشرة
+        btn_browse_attachments = ttk.Button(self, text="Choose Attachments Folder",
+                                            command=self.browse_attachment_folder)
+        self.canvas_bg.create_window(150, 480, anchor='w', window=btn_browse_attachments)
 
-        provider_combobox = ttk.Combobox(self, textvariable=self.email_provider, state='readonly',
-                                         font=("Segoe UI", 12))
-        provider_combobox['values'] = ("Gmail", "Outlook", "Webmail")
-        provider_combobox.current(0)
-        self.canvas_bg.create_window(150, 480, anchor='w', window=provider_combobox)
-
+        # 📧 اختيار الإيميل
         label_email = ttk.Label(self, text="Choose Email Account:", font=("Segoe UI", 16, "bold"))
         self.canvas_bg.create_window(20, 520, anchor='w', window=label_email)
 
@@ -106,11 +104,13 @@ class EmailSenderApp(tk.Tk):
         email_combobox.current(0)
         self.canvas_bg.create_window(150, 520, anchor='w', window=email_combobox)
 
+        # ✅ زر الإرسال
         btn_send_emails = ttk.Button(self, text="Send Emails", command=self.send_emails)
-        self.canvas_bg.create_window(150, 560, anchor='w', window=btn_send_emails)
+        self.canvas_bg.create_window(150, 600, anchor='w', window=btn_send_emails)
 
+        # ❌ زر الخروج
         btn_exit = ttk.Button(self, text="Exit", command=self.destroy)
-        self.canvas_bg.create_window(150, 600, anchor='w', window=btn_exit)
+        self.canvas_bg.create_window(150, 640, anchor='w', window=btn_exit)
 
     def load_email_credentials(self):
         credentials = {}
@@ -152,6 +152,12 @@ class EmailSenderApp(tk.Tk):
         if filename:
             self.excel_file_path = filename
             messagebox.showinfo("Excel File Selected", f"Selected file: {filename}")
+
+    def browse_attachment_folder(self):
+        folder = filedialog.askdirectory()
+        if folder:
+            self.attachment_folder_path = folder
+            messagebox.showinfo("Attachments Folder Selected", f"Selected folder: {folder}")
 
     def send_emails(self):
         sent_emails = []
@@ -289,23 +295,32 @@ class EmailSenderApp(tk.Tk):
                     msg['Subject'] = customized_subject
                     msg.attach(MIMEText(html_final, 'html'))
 
-                    # ✅ إرفاق المرفقات
-                    attachments = row.get('attachments', '')
-                    if not pd.isna(attachments):
-                        for file in attachments.split(','):
-                            file = file.strip()
-                            path = os.path.join('attachments', file)
-                            if os.path.exists(path):
-                                with open(path, 'rb') as f:
-                                    part = MIMEBase('application', 'octet-stream')
-                                    part.set_payload(f.read())
-                                    encoders.encode_base64(part)
-                                    part.add_header('Content-Disposition',
-                                                    f'attachment; filename={os.path.basename(path)}')
-                                    msg.attach(part)
-                                    print(f"📎 Attached: {file}")
-                            else:
-                                print(f"❌ Attachment not found: {file}")
+                    # ✅ إرفاق المرفقات فقط لو العمود موجود وله قيمة
+                    if 'attachments' in df.columns:
+                        attachments = row.get('attachments', '')
+                        if isinstance(attachments, str) and attachments.strip():
+                            for file in attachments.split(','):
+                                file = file.strip()
+                                if not file:
+                                    continue
+                                if not self.attachment_folder_path:
+                                    messagebox.showerror("Error", "Please choose an attachments folder.")
+                                    return
+
+                                path = os.path.join(self.attachment_folder_path, file)
+                                if os.path.exists(path):
+                                    with open(path, 'rb') as f:
+                                        part = MIMEBase('application', 'octet-stream')
+                                        part.set_payload(f.read())
+                                        encoders.encode_base64(part)
+                                        part.add_header(
+                                            'Content-Disposition',
+                                            f'attachment; filename={os.path.basename(path)}'
+                                        )
+                                        msg.attach(part)
+                                        print(f"📎 Attached: {file}")
+                                else:
+                                    print(f"❌ Attachment not found: {file}")
 
                     text = msg.as_string()
                     server.sendmail(email, recipient_emails, text)
